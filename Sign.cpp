@@ -11,6 +11,7 @@ private:
 
 public:
     SIGN() {
+        std::cout << "Конструктор без параметров вызван для объекта: " << this << std::endl;
         this->surname = new char[1];
         this->surname[0] = '\0';
 
@@ -28,6 +29,7 @@ public:
 
     // Конструктор
     SIGN(const char* surname, const char* name, const char* zodiacSign, int day, int month, int year) {
+        std::cout << "Конструктор с параметрами вызван для объекта: " << this << std::endl;
         this->surname = new char[strlen(surname) + 1];
         strcpy(this->surname, surname);
 
@@ -43,8 +45,28 @@ public:
         this->birthDate[2] = year;
     }
 
+    SIGN(const SIGN& other) {
+        std::cout << "Конструктор копирования вызван для объекта: " << this << std::endl;
+
+        this->surname = new char[strlen(other.surname) + 1];
+        strcpy(this->surname, other.surname);
+
+        this->name = new char[strlen(other.name) + 1];
+        strcpy(this->name, other.name);
+
+        this->zodiacSign = new char[strlen(other.zodiacSign) + 1];
+        strcpy(this->zodiacSign, other.zodiacSign);
+
+        this->birthDate = new int[3];
+        this->birthDate[0] = other.birthDate[0];
+        this->birthDate[1] = other.birthDate[1];
+        this->birthDate[2] = other.birthDate[2];
+    }
+
+
     // Деструктор
     ~SIGN() {
+        std::cout << "Деструктор вызван для объекта: " << this << std::endl;
         delete[] surname;
         delete[] name;
         delete[] zodiacSign;
