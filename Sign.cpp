@@ -1,149 +1,78 @@
 #define _CRT_SECURE_NO_WARNINGS
-#include <iostream>
-#include <cstring>
-
-class SIGN {
-private:
-    char* surname;
-    char* name;
-    char* zodiacSign;
-    int* birthDate;
-
-public:
-    SIGN() {
-        std::cout << "Конструктор без параметров вызван для объекта: " << this << std::endl;
-        this->surname = new char[1];
-        this->surname[0] = '\0';
-
-        this->name = new char[1];
-        this->name[0] = '\0';
-
-        this->zodiacSign = new char[1];
-        this->zodiacSign[0] = '\0';
-
-        this->birthDate = new int[3];
-        this->birthDate[0] = 0;
-        this->birthDate[1] = 0;
-        this->birthDate[2] = 0;
-    }
-
-    // Конструктор
-    SIGN(const char* surname, const char* name, const char* zodiacSign, int day, int month, int year) {
-        std::cout << "Конструктор с параметрами вызван для объекта: " << this << std::endl;
-        this->surname = new char[strlen(surname) + 1];
-        strcpy(this->surname, surname);
-
-        this->name = new char[strlen(name) + 1];
-        strcpy(this->name, name);
-
-        this->zodiacSign = new char[strlen(zodiacSign) + 1];
-        strcpy(this->zodiacSign, zodiacSign);
-
-        this->birthDate = new int[3];
-        this->birthDate[0] = day;
-        this->birthDate[1] = month;
-        this->birthDate[2] = year;
-    }
-
-    SIGN(const SIGN& other) {
-        std::cout << "Конструктор копирования вызван для объекта: " << this << std::endl;
-
-        this->surname = new char[strlen(other.surname) + 1];
-        strcpy(this->surname, other.surname);
-
-        this->name = new char[strlen(other.name) + 1];
-        strcpy(this->name, other.name);
-
-        this->zodiacSign = new char[strlen(other.zodiacSign) + 1];
-        strcpy(this->zodiacSign, other.zodiacSign);
-
-        this->birthDate = new int[3];
-        this->birthDate[0] = other.birthDate[0];
-        this->birthDate[1] = other.birthDate[1];
-        this->birthDate[2] = other.birthDate[2];
-    }
-
-
-    // Деструктор
-    ~SIGN() {
-        std::cout << "Деструктор вызван для объекта: " << this << std::endl;
-        delete[] surname;
-        delete[] name;
-        delete[] zodiacSign;
-        delete[] birthDate;
-    }
-
-    // Методы доступа
-    char* getSurname() { return surname; }
-    char* getName() { return name; }
-    char* getZodiacSign() { return zodiacSign; }
-    int* getBirthDate() { return birthDate; }
-
-    void setSurname(const char* surname) {
-        delete[] this->surname;
-        this->surname = new char[strlen(surname) + 1];
-        strcpy(this->surname, surname);
-    }
-
-    void setName(const char* name) {
-        delete[] this->name;
-        this->name = new char[strlen(name) + 1];
-        strcpy(this->name, name);
-    }
-
-    void setZodiacSign(const char* zodiacSign) {
-        delete[] this->zodiacSign;
-        this->zodiacSign = new char[strlen(zodiacSign) + 1];
-        strcpy(this->zodiacSign, zodiacSign);
-    }
-
-    void setBirthDate(int day, int month, int year) {
-        this->birthDate[0] = day;
-        this->birthDate[1] = month;
-        this->birthDate[2] = year;
-    }
-};
-
 
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 int main() {
-    setlocale(LC_ALL, "RUS");
+    std::string filename = "Sign.txt"; // Замените на имя вашего файла
 
-    // Создаем объект класса SIGN
-    SIGN sign1("Иванов", "Иван", "Овен", 1, 1, 1980);
+    // Открываем файл
+    std::ifstream file(filename);
 
-    // Выводим информацию об объекте
-    std::cout << "Фамилия: " << sign1.getSurname() << std::endl;
-    std::cout << "Имя: " << sign1.getName() << std::endl;
-    std::cout << "Знак зодиака: " << sign1.getZodiacSign() << std::endl;
-    std::cout << "Дата рождения: " << sign1.getBirthDate()[0] << "/" << sign1.getBirthDate()[1] << "/" << sign1.getBirthDate()[2] << std::endl;
+    if (!file.is_open()) {
+        std::cerr << "Не удалось открыть файл " << filename << std::endl;
+        return 1;
+    }
 
-    // Изменяем значение
-    sign1.setSurname("Петров");
-    sign1.setName("Петр");
-    sign1.setZodiacSign("Телец");
-    sign1.setBirthDate(2, 2, 1981);
+    std::string longestWord;
+    std::string* words = new std::string[1000]; // массив для хранения слов
+    int* wordCount = new int[1000]; // массив для хранения количества вхождений
+    int wordIndex = 0; // индекс для массива слов
+    int longestWordIndex = 0; // индекс для самого длинного слова
 
-    // Выводим обновленную информацию об объекте
-    std::cout << "Фамилия: " << sign1.getSurname() << std::endl;
-    std::cout << "Имя: " << sign1.getName() << std::endl;
-    std::cout << "Знак зодиака: " << sign1.getZodiacSign() << std::endl;
-    std::cout << "Дата рождения: " << sign1.getBirthDate()[0] << "/" << sign1.getBirthDate()[1] << "/" << sign1.getBirthDate()[2] << std::endl;
+    std::string line;
+    while (std::getline(file, line)) {
+        std::istringstream iss(line);
 
-    SIGN sign2;
+        std::string word;
+        while (iss >> word) {
+            // Убираем знаки препинания с каждого слова
+            std::string cleanedWord;
+            for (char c : word) {
+                if (isalpha(c) || isdigit(c)) {
+                    cleanedWord += c;
+                }
+            }
 
-    // Устанавливаем значения
-    sign2.setSurname("Иванов");
-    sign2.setName("Иван");
-    sign2.setZodiacSign("Овен");
-    sign2.setBirthDate(1, 1, 1980);
+            // Если очищенное слово не пустое, обновляем самое длинное слово
+            if (!cleanedWord.empty()) {
+                if (cleanedWord.length() > longestWord.length()) {
+                    longestWord = cleanedWord;
+                    longestWordIndex = wordIndex;
+                }
 
+                // Увеличиваем счетчик для слова
+                bool found = false;
+                for (int i = 0; i < wordIndex; i++) {
+                    if (words[i] == cleanedWord) {
+                        wordCount[i]++;
+                        found = true;
+                        break;
+                    }
+                }
 
-    std::cout << "Фамилия: " << sign2.getSurname() << std::endl;
-    std::cout << "Имя: " << sign2.getName() << std::endl;
-    std::cout << "Знак зодиака: " << sign2.getZodiacSign() << std::endl;
-    std::cout << "Дата рождения: " << sign2.getBirthDate()[0] << "/" << sign1.getBirthDate()[1] << "/" << sign1.getBirthDate()[2] << std::endl;
+                // Если слово не было найдено, добавляем его в массивы
+                if (!found) {
+                    words[wordIndex] = cleanedWord;
+                    wordCount[wordIndex] = 1;
+                    wordIndex++;
+                }
+            }
+        }
+    }
+
+    // Выводим результаты
+    std::cout << "Самое длинное слово: " << longestWord << std::endl;
+    std::cout << "Количество вхождений: " << wordCount[longestWordIndex] << std::endl;
+
+    // Закрываем файл
+    file.close();
+
+    // Освобождаем память
+    delete[] words;
+    delete[] wordCount;
 
     return 0;
 }
