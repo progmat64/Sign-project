@@ -17,7 +17,7 @@ public:
     Keeper(const Keeper& keeper_copy);
     ~Keeper();
 
-    int get_len();
+    int getLen();
 
     void getBySurname(const string& surname);
 

@@ -4,35 +4,32 @@
 #include <sstream>
 #include "Sign.h"
 #include "Keeper.h"
-#include <conio.h>
 
 using namespace std;
 
 void menu() {
-    cout << "1. Добавить знак" << endl <<
-    "2. Показать список знаков" << endl <<
-    "3. Удалить знак" << endl <<
-    "4. Редактировать знак" << endl <<
-    "5. Получить данные по фамилии" << endl <<
-    "6. Сохранить данные" << endl <<
-    "7. Загрузить данные" << endl <<
-    "0. Выход" << endl <<
-    "Выберите пункт меню: ";
+    cout << "1 - Добавить знак" << endl;
+    cout << "2 - Показать список знаков" << endl;
+    cout << "3 - Редактировать знак" << endl;
+    cout << "4 - Удалить знак" << endl;
+    cout << "5 - Получить данные по фамилии" << endl;
+    cout << "6 - Сохранить данные" << endl;
+    cout << "7 - Загрузить данные" << endl;
+    cout << "0 - Выход" << endl;
+    cout << "Ваш выбор: ";
 }
-
 
 void task1() {
     Keeper* keeper;
     keeper = new Keeper;
 
-    int input_point = 1;
-    int input_number;
-    string input_string, passKey;
-    while (input_point != 0) {
+    int chooise = 1;
+    int number;
+    string surname;
+    while (chooise != 0) {
         menu();
-        cin >> input_point;
-        system("cls");
-        switch (input_point) {
+        cin >> chooise;
+        switch (chooise) {
         case 1:
             Sign * new_Sign;
             new_Sign = new Sign();
@@ -40,23 +37,23 @@ void task1() {
             keeper->add(new_Sign);
             break;
         case 2:
-            cout << "Список Знаков: " << keeper->get_len() << "" << endl;
+            cout << "Список Знаков: " << keeper->getLen() << "" << endl;
             keeper->show();
             break;
         case 3:
-            cout << "Введите индекс знака, который нужно удалить: ";
-            cin >> input_number;
-            keeper->remove(input_number);
+            cout << "Введите индекс знака для редактирования: ";
+            cin >> number;
+            keeper->edit(number);
             break;
         case 4:
-            cout << "Введите индекс знака для редактирования: ";
-            cin >> input_number;
-            keeper->edit(input_number);
+            cout << "Введите индекс знака, который нужно удалить: ";
+            cin >> number;
+            keeper->remove(number);
             break;
         case 5:
             cout << "Введите фамилию, чтобы получить данные: ";
-            cin >> input_string;
-            keeper->getBySurname(input_string);
+            cin >> surname;
+            keeper->getBySurname(surname);
             break;
         case 6:
             keeper->save();
@@ -67,58 +64,81 @@ void task1() {
         default:
             break;
         }
-        cout << "Нажмите любую клавишу для продолжения...";
-        _getch();
-        system("cls");
     }
     keeper->~Keeper();
-    cout << "Закрытие программы пользователем.";
+    cout << "Закрытие программы.";
 }
 
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
+
+using namespace std;
+
+// Функция для выполнения задачи по обработке текстового файла
 int task2() {
+    // Имя файла для чтения
     string filename = "text.txt";
 
+    // Открытие файла
     ifstream file(filename);
 
+    // Проверка успешного открытия файла
     if (!file.is_open()) {
         cerr << "Не удалось открыть файл " << filename << endl;
         return 1;
     }
 
+    // Переменные для хранения самого длинного слова и его индекса
     string longestWord;
-    string* words = new string[1000];
-    int* wordCount = new int[1000];
-    int wordIndex = 0;
     int longestWordIndex = 0;
 
+    // Динамически выделенные массивы для хранения уникальных слов и их частоты встречаемости
+    string* words = new string[1000];
+    int* wordCount = new int[1000];
+
+    // Индекс текущего слова и строки
+    int wordIndex = 0;
+
+    // Чтение файла по строкам
     string line;
     while (getline(file, line)) {
+        // Создание потока для разбора строки на слова
         istringstream iss(line);
 
-        string word;
-        while (iss >> word) {
-            string cleanedWord;
-            for (char c : word) {
+        // Переменная для хранения очищенного слова от знаков препинания и других символов
+        string cleanedWord;
+
+        // Обработка каждого слова в строке
+        while (iss >> cleanedWord) {
+            // Очистка слова от знаков препинания и других символов
+            for (char c : cleanedWord) {
                 if (isalpha(c) || isdigit(c)) {
                     cleanedWord += c;
                 }
             }
 
+            // Если очищенное слово не пусто
             if (!cleanedWord.empty()) {
+                // Если текущее слово длиннее самого длинного, обновляем данные о самом длинном слове
                 if (cleanedWord.length() > longestWord.length()) {
                     longestWord = cleanedWord;
                     longestWordIndex = wordIndex;
                 }
 
+                // Проверка, есть ли слово в массиве уникальных слов
                 bool found = false;
                 for (int i = 0; i < wordIndex; i++) {
                     if (words[i] == cleanedWord) {
+                        // Увеличение счетчика встречаемости слова
                         wordCount[i]++;
                         found = true;
                         break;
                     }
                 }
 
+                // Если слово не найдено в массиве, добавляем его и устанавливаем счетчик в 1
                 if (!found) {
                     words[wordIndex] = cleanedWord;
                     wordCount[wordIndex] = 1;
@@ -128,16 +148,18 @@ int task2() {
         }
     }
 
+    // Вывод результатов
     cout << "Самое длинное слово: " << longestWord << endl;
     cout << "Количество вхождений: " << wordCount[longestWordIndex] << endl;
 
+    // Закрытие файла и освобождение памяти
     file.close();
-
     delete[] words;
     delete[] wordCount;
 
     return 0;
 }
+
 
 int main() {
     setlocale(LC_ALL, "Rus");

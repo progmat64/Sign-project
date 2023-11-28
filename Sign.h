@@ -27,6 +27,10 @@ public:
     void setSign(const string& sSign);
     void setBirthday(const int sBirthday[3]);
 
+    // friend для доступа к приватным и защищенным членам класса Sign 
+    friend ostream& operator<<(ostream& out, const Sign& s);
+    friend istream& operator>>(istream& in, Sign& s);
+
     void printInfo();
     void edit();
     void save();

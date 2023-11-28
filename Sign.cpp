@@ -25,47 +25,45 @@ Sign::~Sign() {
     cout << "Вызван деструктор Sign" << endl;
 }
 
-string Sign::getName() const {
-    return firstName + " " + secondName;
-}
-string Sign::getSurname() const
-{
-    return secondName;
-}
-;
-string Sign::getBirthday() const {
-    return to_string(birthday[0]) + "." + to_string(birthday[1]) + "." + to_string(birthday[2]);
-}
-int Sign::getBirthdayInt()
-{
-    return birthday[0] + birthday[1] * 31 + birthday[2] * 365;
-}
-string Sign::getSign() const {
-    return sign;
-}
+string Sign::getName() const { return firstName + " " + secondName; }
+string Sign::getSurname() const { return secondName; }
+string Sign::getBirthday() const { return to_string(birthday[0]) + "." + to_string(birthday[1]) + "." + to_string(birthday[2]); }
+int Sign::getBirthdayInt() { return birthday[0] + birthday[1] * 31 + birthday[2] * 365; }
+string Sign::getSign() const { return sign; }
+
 
 void Sign::setName(const string& sFirstName, const string& sSecondName) {
     this->firstName = sFirstName;
     this->secondName = sSecondName;
 }
+
 void Sign::setSign(const string& sSign) {
     this->sign = sSign;
 }
+
 void Sign::setBirthday(const int sBirthday[3]) {
     this->birthday[0] = sBirthday[0];
     this->birthday[1] = sBirthday[1];
     this->birthday[2] = sBirthday[2];
 }
 
+ostream& operator<<(ostream& out, const Sign& s) {
+    out << s.firstName << " " << s.secondName << " " << s.sign << " " << s.birthday[0] << " " << s.birthday[1] << " " << s.birthday[2];
+    return out;
+}
+istream& operator>>(istream& in, Sign& s) {
+    in >> s.firstName >> s.secondName >> s.sign >> s.birthday[0] >> s.birthday[1] >> s.birthday[2];
+    return in;
+}
 
 void Sign::printInfo() {
     cout << "[" << getName() << "] - " << getSign() << " (" << getBirthday() << ")" << endl;
 }
 void Sign::edit() {
     if (firstName.empty() || secondName.empty())
-        cout << "Введите имя (формат: имя фамилия): ";
+        cout << "Введите имя (имя фамилия): ";
     else
-        cout << "Введите имя (формат: имя фамилия; текущее - " << getName() << "): ";
+        cout << "Введите имя (имя фамилия; текущее - " << getName() << "): ";
     cin >> firstName >> secondName;
     if (sign.empty())
         cout << "Введите знак: ";
@@ -73,9 +71,9 @@ void Sign::edit() {
         cout << "Введите знак (текущий - " << getSign() << "): ";
     cin >> sign;
     if (birthday[0] == 0 && birthday[1] == 0 && birthday[2] == 0)
-        cout << "Введите дату рождения (формат: ДД ММ ГГ): ";
+        cout << "Введите дату рождения (ДД ММ ГГ): ";
     else
-        cout << "Введите дату рождения (формат: ДД ММ ГГ; текущая - " << getBirthday() << "): ";
+        cout << "Введите дату рождения (ДД ММ ГГ; текущая - " << getBirthday() << "): ";
     cin >> birthday[0] >> birthday[1] >> birthday[2];
     cout << "" << endl;
     printInfo();
@@ -85,7 +83,7 @@ void Sign::save() {
     string file_name = "Sign.txt";
     file.open(file_name, ios::app);
     if (!file) {
-        cout << "Ошибка при открытии файла " << file_name << " для загрузки данных.";
+        cout << "Ошибка при открытии файла " << file_name << " для загрузки данных";
         return;
     }
     file << firstName << " " << secondName << endl << sign << endl << birthday[0] << " " << birthday[1] << " " << birthday[2] << endl;
