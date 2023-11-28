@@ -2,23 +2,78 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include "Sign.h"
+#include "Keeper.h"
+#include <conio.h>
 
 using namespace std;
 
-void menuf() {
+void menu() {
     cout << "1. Добавить знак" << endl <<
-        "2. Показать список знаков" << endl <<
-        "3. Удалить знак" << endl <<
-        "4. Редактировать знак" << endl <<
-        "5. Получить данные по знаку" << endl <<
-        "6. Сохранить данные" << endl <<
-        "7. Загрузить данные" << endl <<
-        "0. Выход" << endl <<
-        "Выберите пункт меню: ";
+    "2. Показать список знаков" << endl <<
+    "3. Удалить знак" << endl <<
+    "4. Редактировать знак" << endl <<
+    "5. Получить данные по фамилии" << endl <<
+    "6. Сохранить данные" << endl <<
+    "7. Загрузить данные" << endl <<
+    "0. Выход" << endl <<
+    "Выберите пункт меню: ";
 }
 
 
-void task1() {}
+void task1() {
+    Keeper* keeper;
+    keeper = new Keeper;
+
+    int input_point = 1;
+    int input_number;
+    string input_string, passKey;
+    while (input_point != 0) {
+        menu();
+        cin >> input_point;
+        system("cls");
+        switch (input_point) {
+        case 1:
+            Sign * new_Sign;
+            new_Sign = new Sign();
+            new_Sign->edit();
+            keeper->add(new_Sign);
+            break;
+        case 2:
+            cout << "Список Знаков: " << keeper->get_len() << "" << endl;
+            keeper->show();
+            break;
+        case 3:
+            cout << "Введите индекс знака, который нужно удалить: ";
+            cin >> input_number;
+            keeper->remove(input_number);
+            break;
+        case 4:
+            cout << "Введите индекс знака для редактирования: ";
+            cin >> input_number;
+            keeper->edit(input_number);
+            break;
+        case 5:
+            cout << "Введите фамилию, чтобы получить данные: ";
+            cin >> input_string;
+            keeper->getBySurname(input_string);
+            break;
+        case 6:
+            keeper->save();
+            break;
+        case 7:
+            keeper->load();
+            break;
+        default:
+            break;
+        }
+        cout << "Нажмите любую клавишу для продолжения...";
+        _getch();
+        system("cls");
+    }
+    keeper->~Keeper();
+    cout << "Закрытие программы пользователем.";
+}
 
 int task2() {
     string filename = "text.txt";
@@ -87,7 +142,7 @@ int task2() {
 int main() {
     setlocale(LC_ALL, "Rus");
     int task;
-    cout << "chouse task (1/2): ";
+    cout << "Выберите задачу (1 или 2): ";
     cin >> task;
     if (task == 1) {
         task1();
