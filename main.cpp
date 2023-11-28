@@ -17,9 +17,10 @@ void menuf() {
         "Выберите пункт меню: ";
 }
 
-void task_1_run() {}
 
-int task_2_run() {
+void task1() {}
+
+int task2() {
     string filename = "text.txt";
 
     ifstream file(filename);
@@ -89,10 +90,10 @@ int main() {
     cout << "chouse task (1/2): ";
     cin >> task;
     if (task == 1) {
-        task_1_run();
+        task1();
     }
     else {
-        task_2_run();
+        task2();
     }
     return 0;
 }
