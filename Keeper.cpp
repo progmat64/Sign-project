@@ -217,15 +217,11 @@ void Keeper::load() {
 void Keeper::show() {
     if (head != nullptr) {
         Queue* obj_ptr = head;
-
-        // Вывод информации о первом элементе списка
-        cout << "";
+        cout << "0. ";
         obj_ptr->data->printInfo();
-
-        // Вывод информации об остальных элементах списка
         for (int i = 0; i < len - 1; i++) {
             obj_ptr = obj_ptr->next;
-            cout << "" << i + 1 << ". ";
+            cout << i + 1 << ". ";
             obj_ptr->data->printInfo();
         }
     }
@@ -233,7 +229,6 @@ void Keeper::show() {
         cout << "Нет данных" << endl;
     }
 }
-
 
 Sign* Keeper::operator[](int index) {
     if (index >= 0 && index < len && head != nullptr) {
@@ -262,11 +257,15 @@ void Keeper::getBySurname(const string& surname) {
     bool has_obj = false;
     if (head != nullptr) {
         Queue* obj_ptr = head;
+
+        // Проверка, является ли фамилия искомой фамилией первого элемента
         if (obj_ptr->data->getSurname() == surname) {
             cout << "";
             obj_ptr->data->printInfo();
             has_obj = true;
         }
+
+        // Поиск и вывод информации об остальных элементах списка
         for (int i = 0; i < len - 1; i++) {
             obj_ptr = obj_ptr->next;
             if (obj_ptr->data->getSurname() == surname) {
@@ -276,9 +275,11 @@ void Keeper::getBySurname(const string& surname) {
             }
         }
     }
-    else
+    else {
         cout << "Нет данных" << endl;
+    }
+
+    // Вывод сообщения, если не найдено ни одного элемента с указанной фамилией
     if (!has_obj)
         cout << "Нет данных" << endl;
 }
-

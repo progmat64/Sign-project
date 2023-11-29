@@ -69,76 +69,62 @@ void task1() {
     cout << "Закрытие программы.";
 }
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-
-using namespace std;
-
-// Функция для выполнения задачи по обработке текстового файла
+// Функция task2 читает файл "text.txt", находит самое длинное слово и подсчитывает частоту встречаемости каждого уникального слова.
 int task2() {
-    // Имя файла для чтения
+    // Указание имени файла
     string filename = "text.txt";
-
-    // Открытие файла
+    // Создание объекта ifstream для чтения файла
     ifstream file(filename);
 
-    // Проверка успешного открытия файла
+    // Проверка, успешно ли открыт файл
     if (!file.is_open()) {
         cerr << "Не удалось открыть файл " << filename << endl;
         return 1;
     }
 
-    // Переменные для хранения самого длинного слова и его индекса
-    string longestWord;
-    int longestWordIndex = 0;
+    // Инициализация переменных
+    string longestWord;        // Самое длинное слово
+    string* words = new string[1000];    // Массив для хранения уникальных слов
+    int* wordCount = new int[1000];      // Массив для хранения частоты встречаемости слов
+    int wordIndex = 0;          // Индекс для отслеживания текущей позиции в массивах
+    int longestWordIndex = 0;   // Индекс самого длинного слова в массиве
 
-    // Динамически выделенные массивы для хранения уникальных слов и их частоты встречаемости
-    string* words = new string[1000];
-    int* wordCount = new int[1000];
-
-    // Индекс текущего слова и строки
-    int wordIndex = 0;
-
-    // Чтение файла по строкам
+    // Чтение файла построчно
     string line;
     while (getline(file, line)) {
-        // Создание потока для разбора строки на слова
         istringstream iss(line);
 
-        // Переменная для хранения очищенного слова от знаков препинания и других символов
-        string cleanedWord;
-
-        // Обработка каждого слова в строке
-        while (iss >> cleanedWord) {
-            // Очистка слова от знаков препинания и других символов
-            for (char c : cleanedWord) {
+        string word;
+        // Разделение строки на слова
+        while (iss >> word) {
+            string cleanedWord;
+            // Очистка слова от символов, отличных от букв и цифр
+            for (char c : word) {
                 if (isalpha(c) || isdigit(c)) {
                     cleanedWord += c;
                 }
             }
 
-            // Если очищенное слово не пусто
+            // Если слово не пустое после очистки
             if (!cleanedWord.empty()) {
-                // Если текущее слово длиннее самого длинного, обновляем данные о самом длинном слове
+                // Если текущее слово длиннее самого длинного, обновляем самое длинное слово
                 if (cleanedWord.length() > longestWord.length()) {
                     longestWord = cleanedWord;
                     longestWordIndex = wordIndex;
                 }
 
-                // Проверка, есть ли слово в массиве уникальных слов
+                // Проверка, встречается ли слово уже в массиве уникальных слов
                 bool found = false;
                 for (int i = 0; i < wordIndex; i++) {
                     if (words[i] == cleanedWord) {
-                        // Увеличение счетчика встречаемости слова
+                        // Если слово уже встречалось, увеличиваем счетчик
                         wordCount[i]++;
                         found = true;
                         break;
                     }
                 }
 
-                // Если слово не найдено в массиве, добавляем его и устанавливаем счетчик в 1
+                // Если слово не встречалось, добавляем его в массив
                 if (!found) {
                     words[wordIndex] = cleanedWord;
                     wordCount[wordIndex] = 1;
@@ -148,7 +134,7 @@ int task2() {
         }
     }
 
-    // Вывод результатов
+    // Вывод самого длинного слова и его частоты встречаемости
     cout << "Самое длинное слово: " << longestWord << endl;
     cout << "Количество вхождений: " << wordCount[longestWordIndex] << endl;
 
@@ -157,6 +143,7 @@ int task2() {
     delete[] words;
     delete[] wordCount;
 
+    // Возвращение 0, чтобы указать успешное завершение программы
     return 0;
 }
 

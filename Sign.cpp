@@ -57,7 +57,7 @@ istream& operator>>(istream& in, Sign& s) {
 }
 
 void Sign::printInfo() {
-    cout << "[" << getName() << "] - " << getSign() << " (" << getBirthday() << ")" << endl;
+    cout << getName() << " - " << getSign() << " - " << getBirthday() << endl;
 }
 void Sign::edit() {
     if (firstName.empty() || secondName.empty())

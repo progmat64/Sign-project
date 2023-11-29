@@ -18,7 +18,6 @@ public:
     ~Keeper();
 
     int getLen();
-
     void getBySurname(const string& surname);
 
     Sign* operator[](int index);
